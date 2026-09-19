@@ -1,8 +1,12 @@
-desc:FUORILAVOCE Mid Side Eq
+// Copyright (C) 2022-2026 reaperiani
+// SPDX-License-Identifier: GPL-3.0-or-later
 
-slider1:gain_db=0<-150,12,1>-gain (dB)
-slider2:100<0,100,0.05>Frequenza (Hz)
-slider3:0<0,6,1>Forza (Db)
+desc:FUORILAVOCE Mid/Side EQ
+tags:equalizer stereo mid-side
+
+slider1:gain_db=0<-150,12,1>-Gain finale (dB)
+slider2:100<0,100,0.05>Frequenza
+slider3:0<0,6,1>Forza (dB)
 
 in_pin:left input
 in_pin:right input
@@ -40,7 +44,7 @@ frequenzahz = floor(exp(frequenzasx*log(1.059))*8.17742);
 
 //SLIDER PER EQ 1
 
-//Gain 3 e -3 con q 1 (nel calcolo di a moltiplicato dopo arc)
+//Gain opposti con Q 1 (nel calcolo di a moltiplicato dopo arc)
 arc=frequenzahz*$pi/(srate*0.5);
 gain=(2 ^ (gainfra/6));
 a=(sin(arc)*1) * (gain < 1 ? 1 : 0.25);
@@ -117,4 +121,3 @@ gfx_drawnumber(frequenzahz,0);
 gfx_drawchar($' ');
 gfx_drawchar($'H');
 gfx_drawchar($'z');
-

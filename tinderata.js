@@ -1,21 +1,27 @@
 // Copyright (C) 2004 and on, Cockos Inc.
-// License: GPL
+// Modificato da reaperiani, 2022-2026.
+// SPDX-License-Identifier: GPL-3.0-or-later
 
-desc:tinder equalizer
+desc:Tinder EQ
+tags:equalizer stereo complementary
 
-slider1:100<0,100,0.05>Frequenza (Hz)
-slider2:0<-12,12,1>gain (dB)
-slider3:0.7<0.01,5,0.05>width
-slider4:5<0,5,0{1,2,3,4,5,6}>canale
-slider5:0<0,1,0{maschio,femmina}>sesso
+slider1:100<0,100,0.05>Frequenza
+slider2:0<-12,12,1>Gain (dB)
+slider3:0.7<0.01,5,0.05>Larghezza
+slider4:5<0,5,1{1,2,3,4,5,6}>Gruppo
+slider5:0<0,1,1{maschio,femmina}>Ruolo
+
+in_pin:Ingresso sinistro
+in_pin:Ingresso destro
+out_pin:Uscita sinistra
+out_pin:Uscita destra
 
 @init
 c0=c1=c2=0;
 ldelay1=ldelay2=rdelay1=rdelay2=0;
 li1=li2=ri1=ri2=0;
 
-//controllo che width non sia zero.
-//se è zero lo forzo al default 0.7
+// Controlla che la larghezza non sia zero e, nel caso, usa il default 0.7.
 _global.tinderata.width == 0 ? _global.tinderata.width=0.7; 
 _global.tinderata.width1 == 0 ? _global.tinderata.width1=0.7; 
 _global.tinderata.width2 == 0 ? _global.tinderata.width2=0.7; 
@@ -25,7 +31,7 @@ _global.tinderata.width5 == 0 ? _global.tinderata.width5=0.7;
 
 
 @slider
-//conversione sluder freq
+// Conversione del cursore in frequenza.
 frequenzasx = 16+slider1*1.20103;
 frequenzahz = floor(exp(frequenzasx*log(1.059))*8.17742);
 
@@ -41,12 +47,11 @@ c1=tmp*2*cos(arc);
 c2=tmp*(a-1);
 
 
-//prelettura valori
-//E' stato cambiato il canale di colpo?
+// Salva i valori solo se non è appena cambiato il gruppo.
 
 slider4 == memoria ? ( 
 
-//global copy
+// Copia nelle variabili globali condivise.
 slider4==0 ? _global.tinderata.freq=slider1;
 slider4==0 ? _global.tinderata.width=slider3;
 slider4==1 ? _global.tinderata.freq1=slider1;
@@ -62,7 +67,7 @@ slider4==5 ? _global.tinderata.width5=slider3;
 
 
 
-//gain copy se maschio o femmina
+// Copia il gain con segno normale o invertito in base al ruolo.
 slider4==0 ? slider5==0 ? _global.tinderata.gain=slider2;
 slider4==0 ? slider5==1 ? _global.tinderata.gain=-slider2;
 slider4==1 ? slider5==0 ? _global.tinderata.gain1=slider2;
@@ -83,7 +88,7 @@ memoria=slider4;
 @sample
 
 
-//global copy
+// Legge le variabili globali condivise.
 slider4==0 ? slider1=_global.tinderata.freq;
 slider4==0 ? slider3=_global.tinderata.width;
 slider4==1 ? slider1=_global.tinderata.freq1;
@@ -97,7 +102,7 @@ slider4==4 ? slider3=_global.tinderata.width4;
 slider4==5 ? slider1=_global.tinderata.freq5;
 slider4==5 ? slider3=_global.tinderata.width5;
 
-//gain copy se maschio o femmina
+// Legge il gain con segno normale o invertito in base al ruolo.
 slider4==0 ? slider5==0 ? slider2=_global.tinderata.gain;
 slider4==0 ? slider5==1 ? slider2=-_global.tinderata.gain;
 slider4==1 ? slider5==0 ? slider2=_global.tinderata.gain1;
@@ -111,7 +116,7 @@ slider4==4 ? slider5==1 ? slider2=-_global.tinderata.gain4;
 slider4==5 ? slider5==0 ? slider2=_global.tinderata.gain5;
 slider4==5 ? slider5==1 ? slider2=-_global.tinderata.gain5;
 
-//conversione sluder freq
+// Conversione del cursore in frequenza.
 frequenzasx = 16+slider1*1.20103;
 frequenzahz = floor(exp(frequenzasx*log(1.059))*8.17742);
 
